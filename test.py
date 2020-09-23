@@ -8,24 +8,20 @@ import rSGM
 
 if __name__ == '__main__':
     left = cv2.imread(path1, -1)
-    righ = cv2.imread(path2, -1)
+    right = cv2.imread(path2, -1)
     print("输入图像尺寸：", left.shape[1], 'x', left.shape[0])
     # left = cv2.pyrDown(left)
-    # righ = cv2.pyrDown(righ)
+    # right = cv2.pyrDown(right)
 
     # 彩色图-->灰度图
     if left.ndim >= 3:
-        iml = cv2.cvtColor(left, cv2.COLOR_BGR2GRAY)
-    else:
-        iml = left
+        left = cv2.cvtColor(left, cv2.COLOR_BGR2GRAY)
     if righ.ndim >= 3:
-        imr = cv2.cvtColor(righ, cv2.COLOR_BGR2GRAY)
-    else:
-        imr = righ
+        right = cv2.cvtColor(right, cv2.COLOR_BGR2GRAY)
 
     # 去噪
-    # iml = cv2.fastNlMeansDenoising(iml, h=10, templateWindowSize=7, searchWindowSize=21)
-    # imr = cv2.fastNlMeansDenoising(imr, h=10, templateWindowSize=7, searchWindowSize=21)
+    # left = cv2.fastNlMeansDenoising(left, h=10, templateWindowSize=7, searchWindowSize=21)
+    # right = cv2.fastNlMeansDenoising(right, h=10, templateWindowSize=7, searchWindowSize=21)
 
 
     # SGM参数设置
@@ -43,8 +39,8 @@ if __name__ == '__main__':
 
     # 匹配
     tic = time.time()
-    rsgm = rSGM.stereoRSGM(iml.shape[1], iml.shape[0], param, numStrips = 0, border= 20)
-    rsgm.compute(iml, imr)
+    rsgm = rSGM.stereoRSGM(left.shape[1], left.shape[0], param, numStrips = 0, border= 20)
+    rsgm.compute(left, right)
     displ = rsgm.get_disparity_map_left()
     displ = (displ / 16.).astype(np.float32)
     dispr = rsgm.get_disparity_map_right()
